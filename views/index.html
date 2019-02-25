@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+    <title>My Home</title>
+</head>
+<style type="text/css">
+    .icon {
+        color: white;
+        font-size: 22px;
+    }
+
+    .heading {
+        color: white;
+        font-size: 25px;
+        display: flex;
+        flex: 1 1;
+        margin-left: 1%;
+    }
+</style>
+
+<body onload="getRooms()">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <nav class="navbar navbar-dark bg-dark">
+        <i class="fas fa-home icon"></i>
+        <span class="heading"> IOT Workshop</span>
+    </nav>
+    <div class="container-fluid">
+        <h2 class="display-4">Welcome, Mansi</h2>
+        <div class="accordion" id="wrapper">
+
+        </div>
+    </div>
+    <script>
+        function getRooms() {
+            sendRequest('/api/rooms', "GET", '', function (result) {
+                var wrapper = document.getElementById('wrapper');
+                JSON.parse(result).forEach(
+                    room => {
+                        var roomCard = document.createElement('div');
+                        roomCard.className = 'card';
+                        var roomCardHeader = document.createElement('div');
+                        roomCardHeader.className = 'card-header';
+                        roomCardHeader.id = 'heading' + room.id;
+                        var heading = document.createElement('h2');
+                        heading.className = "mb-0";
+                        var headingButton = document.createElement('button');
+                        headingButton.className = "btn btn-link";
+                        headingButton.setAttribute("type", "button");
+                        headingButton.setAttribute("data-toggle", "collapse");
+                        headingButton.setAttribute("data-target", '#collapse' + room.id);
+                        headingButton.setAttribute("aria-expanded", true);
+                        headingButton.setAttribute("aria-controls", "collapse" + room.id);
+
+                        headingButton.innerHTML = room.name;
+                        heading.appendChild(headingButton);
+                        roomCardHeader.appendChild(heading);
+                        roomCard.appendChild(roomCardHeader);
+
+
+                        var roomCardCollapse = document.createElement('div');
+                        roomCardCollapse.id = 'collapse' + room.id;
+                        roomCardCollapse.className = 'collapse';
+                        roomCardCollapse.setAttribute("aria-labelledby", 'heading' + room.id);
+
+                        roomCardCollapse.setAttribute("data-parent", '#wrapper');
+                        var roomCardBody = document.createElement('div');
+                        roomCardBody.className = "card-body";
+                        room.devices.forEach(device => {
+                            var deviceButton = document.createElement('button');
+                            deviceButton.setAttribute("type", "button");
+                            if (device.value) {
+                                deviceButton.className = "btn btn-info";
+                            } else {
+                                deviceButton.className = "btn btn-secondary";
+                            }
+                            deviceButton.innerHTML = device.name;
+                            deviceButton.style['margin'] = '10px';
+                            deviceButton.onclick = function () {
+                                const data = {
+                                    id: room.id,
+                                    device: device
+                                }
+                                sendRequest('/api/room', "POST", data, function (result) {
+                                    const deviceResult = JSON.parse(result);
+                                    if (deviceResult.value) {
+                                        deviceButton.className = "btn btn-info";
+                                    } else {
+                                        deviceButton.className = "btn btn-secondary";
+                                    }
+                                });
+                            };
+                            roomCardBody.appendChild(deviceButton)
+                        })
+                        roomCardCollapse.appendChild(roomCardBody);
+                        roomCard.appendChild(roomCardCollapse);
+                        wrapper.appendChild(roomCard);
+
+                    }
+                );
+            });
+        }
+
+        function sendRequest(url, method, data, _callback) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    _callback(this.responseText);
+                }
+            };
+            xhttp.open(method, url, true);
+            if (method == "POST") {
+                xhttp.setRequestHeader("Content-type", "application/json");
+            }
+            xhttp.send(JSON.stringify(data));
+        }
+    </script>
+</body>
+
+</html>
