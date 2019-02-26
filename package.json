@@ -1,0 +1,30 @@
+{
+  "name": "iot_workshop",
+  "version": "1.0.0",
+  "description": "practice session for iot",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manshis/iot_workshop.git"
+  },
+  "keywords": [
+    "iot",
+    "bootstrap",
+    "html",
+    "css"
+  ],
+  "author": "Manshi Sharma",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/manshis/iot_workshop/issues"
+  },
+  "homepage": "https://github.com/manshis/iot_workshop#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "nodemon": "^1.18.10"
+  }
+}
