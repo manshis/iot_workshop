@@ -3,10 +3,10 @@
 
 ##	PREREQUISITE 
 
-###	Node.js (version 8.9.4)
+###	Node.js 
 Node.js is an open-source, cross-platform JavaScript run-time environment for executing JavaScript code server-side.
 
-### npm (version 5.6.0)
+### npm 
 When you install node.js, npm is automatically installed. However, npm gets updated more frequently than Node.js, so be sure that you have the latest version.
 
 ## Installation
