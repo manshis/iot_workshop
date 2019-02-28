@@ -16,9 +16,6 @@ app.get('*', (req, res) => {
   res.sendFile( __dirname + "/views/" + "index.html" );
 });
  
-var server = app.listen(8081, function () {
-    var host = server.address().address
-    var port = server.address().port
-    
-    console.log("Server listening at http://localhost:8081/");
- })
+app.listen(app.get('port'), function() {
+  console.log("Node app is running at localhost:" + app.get('port'))
+})
