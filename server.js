@@ -15,7 +15,9 @@ app.use('/api', routes);
 app.get('*', (req, res) => {
   res.sendFile( __dirname + "/views/" + "index.html" );
 });
- 
-app.listen(app.get('port'), function() {
-  console.log("Node app is running at localhost:" + app.get('port'))
+
+const port = process.env.PORT || 80
+
+app.listen(port, function() {
+  console.log("Node app is running at localhost:" + port)
 })
